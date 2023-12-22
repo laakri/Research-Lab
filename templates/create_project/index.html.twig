@@ -1,7 +1,27 @@
+{# templates/create_project/index.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
+    <div class="container mt-4">
         <h1>Create a New Project</h1>
+        
+        {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
+
+        <div class="col-12">
+            {{ form_row(form.name, {'attr': {'class': 'form-control mb-3'}}) }}
+        </div>
+
+        <div class="col-12">
+            {{ form_row(form.description, {'attr': {'class': 'form-control mb-3'}}) }}
+        </div>
+
+        <div class="col-12">
+            {# Add the submit button with some margin at the top #}
+            <button type="submit" class="btn btn-primary">Create Project</button>
+        </div>
+
+        {{ form_end(form) }}
+       
     </div>
 {% endblock %}

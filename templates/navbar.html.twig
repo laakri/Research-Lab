@@ -1,3 +1,4 @@
+{# templates/navbar.html.twig #}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
@@ -9,6 +10,18 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('signup') }}">Sign Up</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('create_project') }}">Create Project</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('all_projects') }}">All Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('project_details', {'id': 1}) }}">Project Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('create_equipment') }}">Create Equipment</a>
                 </li>
             </ul>
         </div>

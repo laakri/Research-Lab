@@ -15,3 +15,19 @@ signin:
 signup:
   path: /signup
   controller: App\Controller\SignUpController::index
+
+create_project:
+  path: /create-project
+  controller: App\Controller\CreateProjectController::index
+
+all_projects:
+  path: /all-projects
+  controller: App\Controller\AllProjectsController::index
+
+project_details:
+  path: /project-details/{id}
+  controller: App\Controller\ProjectDetailsController::index
+
+create_equipment:
+  path: /create-equipment
+  controller: App\Controller\CreateEquipmentController::index

@@ -1,5 +1,13 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+
+signin:
+  path: /signin
+  controller: App\Controller\SignInController::index
+
+signup:
+  path: /signup
+  controller: App\Controller\SignUpController::index

@@ -7,6 +7,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 {% endblock %}
 {% block body %}
+ <script src=
+"https://cdn.jsdelivr.net/npm/chart.js">
+      </script>
 	<style>
 		body {
 			background-color: rgb(239, 237, 250);
@@ -62,7 +65,7 @@
 			width: 450px;
 		}
 		.lo {
-			width: 250px;
+			width: 400px;
 		}
 		.btn-floating {
 			border-radius: 50%;
@@ -73,6 +76,21 @@
 			margin: 15px 15px 15px 250px;
 		}
 	</style>
+	 <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+ 
+        h1 {
+            color: green;
+        }
+ 
+        canvas {
+            border: 2px solid #858080;
+        }
+    </style>
 	<div class="container rounded bg-white mt-5 mb-5">
 		<div class="row">
 			<div class="col-md-3 border-right">
@@ -185,7 +203,82 @@
 
 	</div>
     <div>
-<h1>Etat d'avencement</h1>
+<h1>Etat d'avencement</h1> 
+    <canvas id="myLineChart"
+            width="380" height="180">
+      </canvas>
+ 
+    <script>
+        // data for showing the line chart
+        let labels = ['Lundi', 'Mardi', 
+                      'Mercredi', 'Jeudi', 'Vendredi'];
+        let dataset1Data = [10, 25, 13, 18, 30];
+        let dataset2Data = [20, 15, 28, 22, 10];
+ 
+        // Creating line chart
+        let ctx = 
+            document.getElementById('myLineChart').getContext('2d');
+        let myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Programme',
+                        data: dataset1Data,
+                        borderColor: 'blue',
+                        borderWidth: 2,
+                        fill: false,
+                    },
+                    {
+                        label: 'Publication scientifique',
+                        data: dataset2Data,
+                        borderColor: 'red',
+                        borderWidth: 2,
+                        fill: false,
+                    },
+                   
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Jours',
+                            font: {
+                                padding: 4,
+                                size: 20,
+                                weight: 'bold',
+                                family: 'Arial'
+                            },
+                            color: 'darkblue'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Values',
+                            font: {
+                                size: 20,
+                                weight: 'bold',
+                                family: 'Arial'
+                            },
+                            color: 'darkblue'
+                        },
+                        beginAtZero: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Values',
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+ 
+
 <div>
 
 </div>
@@ -195,4 +288,5 @@
 </div>
 
 </div>
+
 </div>{% endblock %}

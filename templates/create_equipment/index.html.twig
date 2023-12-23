@@ -1,18 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CreateEquipmentController!{% endblock %}
+{% block title %}Create Equipment{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container mt-4">
+    <h1>Create Equipment</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    {{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
 
-    This friendly message is coming from:
-    <ul>
-    </ul>
+    <div class="col-12">
+        {{ form_row(form.name, {'attr': {'class': 'form-control mb-3'}, 'label': 'Equipment Name'}) }}
+    </div>
+
+    <div class="col-12">
+        {{ form_row(form.description, {'attr': {'class': 'form-control mb-3'}, 'label': 'Equipment Description'}) }}
+    </div>
+
+    <div class="col-12">
+        {# Add the submit button with some margin at the top #}
+        <button type="submit" class="btn btn-success">Create Equipment</button>
+    </div>
+
+    {{ form_end(form) }}
 </div>
 {% endblock %}

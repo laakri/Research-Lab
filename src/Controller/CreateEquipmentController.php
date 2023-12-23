@@ -30,4 +30,5 @@ class CreateEquipmentController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+  
 }

@@ -1,7 +1,179 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ChercheurController!{% endblock %}
-
-{% block body %}
-profile
+{% block title %}Hello ProjectDetailsController!
 {% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+{% endblock %}
+{% block body %}
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<style>
+		body {
+			background-color: rgb(239, 237, 250);
+
+		}
+
+		.form-control:focus {
+			box-shadow: none;
+			border-color: #BA68C8
+		}
+
+		.profile-button {
+			background: rgb(99, 39, 120);
+			box-shadow: none;
+			border: none
+		}
+
+		.profile-button:hover {
+			background: #682773
+		}
+
+		.profile-button:focus {
+			background: #682773;
+			box-shadow: none
+		}
+
+		.profile-button:active {
+			background: #682773;
+			box-shadow: none
+		}
+
+		.back:hover {
+			color: #682773;
+			cursor: pointer
+		}
+
+		.labels {
+			font-size: 11px
+		}
+
+		.add-experience:hover {
+			background: #BA68C8;
+			color: #fff;
+			cursor: pointer;
+			border: solid 1px #BA68C8
+		}
+		.btn-rounded {
+			width: 150px;
+			margin-bottom: 20px;
+
+		}
+		.table {
+			width: 450px;
+		}
+		.lo {
+			width: 400px;
+		}
+		.btn-floating {
+			border-radius: 50%;
+
+		}
+		.button-add {
+			color: black;
+			margin: 15px 15px 15px 250px;
+		}
+	</style>
+	<style>
+		body {
+			font-family: 'Arial', sans-serif;
+			margin: 20px;
+			text-align: center;
+		}
+
+		h1 {
+			color: green;
+		}
+
+		canvas {
+			border: 2px solid #858080;
+		}
+	</style>
+	<div class="container rounded bg-white mt-5 mb-5">
+		<div class="row">
+			<div class="col-md-3 border-right">
+				<div class="d-flex flex-column align-items-center text-center p-3 py-5">
+					<h1>Profile chercheur</h1>
+
+					<span class="text-black-50">Zbidi chaima</span>
+					<span>Description :</span>
+				</br>
+				<p>Lorem.jndqkhjnq jdhindkn sdhizqhihde
+				</p>
+			</br>
+			<button type="button" class="btn btn-success btn-rounded" data-mdb-ripple-init>Modifier</button>
+			<button type="button" class="btn btn-danger btn-rounded" data-mdb-ripple-init>Supprimer</button>
+		</div>
+	</div>
+	<div class="col-md-5 border-right">
+		<div class="p-3 py-5">
+			<div class="d-flex justify-content-between align-items-center mb-3">
+				<h4 class="text-right">Gestion des projets</h4>
+			</div>
+			<button type="button" class="btn btn-outline-warning button-add" data-mdb-ripple-init data-mdb-ripple-color="dark">Add Publication scientifique</button>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Projets</th>
+						<th scope="col">Publication</th>
+						<th scope="col">Gestion</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">1</th>
+						<td>energie</td>
+						<td>Otto</td>
+						<td>
+							<button type="button" class="btn btn-primary btn-floating" data-mdb-ripple-init>
+								<i class="fas fa-download"></i>
+							</button>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">2</th>
+						<td>electrique</td>
+						<td>Thornton</td>
+						<td>
+							<button type="button" class="btn btn-primary btn-floating" data-mdb-ripple-init>
+								<i class="fas fa-download"></i>
+							</button>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">2</th>
+						<td>Jacob</td>
+						<td>Thornton</td>
+						<td>
+							<button type="button" class="btn btn-primary btn-floating" data-mdb-ripple-init>
+								<i class="fas fa-download"></i>
+							</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+	<div class="col-md-4">
+		<div class="p-3 py-5">
+			<div class="d-flex justify-content-between align-items-center experience">
+				<h4>
+					Ajouter un role
+				</h4>
+				<span class="border px-3 p-1 add-experience">
+					<i class="fa fa-plus"></i>&nbsp;Role</span>
+			</div><br>
+            <h3>
+            Chercheur Principale
+            </h3>
+
+
+		</div>
+
+
+	</div>
+
+
+</div></div></div></div></div></div>{% endblock %}

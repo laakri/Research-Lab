@@ -15,6 +15,7 @@ class ChercheurController extends AbstractController
             'controller_name' => 'ChercheurController',
         ]);
     }
+    
     #[Route('/profile-chercheur', name: 'app_profile_chercheur')]
     public function show(): Response
     {

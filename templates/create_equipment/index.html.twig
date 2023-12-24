@@ -15,28 +15,21 @@ margin:5px
             color:rgb(0, 11, 216);
         }
 	</style>
-	<div class="container mt-4">
-		<h1>Create Equipment</h1>
 
-		{{ form_start(form, {'attr': {'class': 'row g-3'}}) }}
-
-		<div class="col-12">
-			{{ form_row(form.name, {'attr': {'class': 'form-control mb-3'}, 'label': 'Equipment Name'}) }}
-		</div>
-
-		<div class="col-12">
-			{{ form_row(form.description, {'attr': {'class': 'form-control mb-3'}, 'label': 'Equipment Description'}) }}
-		</div>
-
-		<div
-			class="col-12">
-			{# Add the submit button with some margin at the top #}
-			<button type="submit" class="btn btn-success">Create Equipment</button>
-		</div>
-
-		{{ form_end(form) }}
-
-	</div>
+<div class="container mt-4">
+    <h1>Create Equipment</h1>
+    <form method="post" action="{{ path('create_equipment') }}">
+        <div class="mb-3">
+            <label class="form-label">Equipment Name</label>
+            <input type="text" class="form-control" name="equipment">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" name="description">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 	<div class=" container mt-4">
 		<h1>Liste d'équipements</h1>
 <div class="form-outline" data-mdb-input-init>
@@ -56,18 +49,19 @@ margin:5px
 				</tr>
 			</thead>
 			<tbody>
+			  {% for equipment in equipments %}
 				<tr>
 					<td>
 						<div class="d-flex align-items-center">
 
 							<div class="ms-3">
-								<p class="fw-bold mb-1">Projecteur</p>
+								<p class="fw-bold mb-1">{{ equipment.getName() }}</p>
 								<p class="text-muted mb-0">Monsieur Nizar</p>
 							</div>
 						</div>
 					</td>
 					<td>
-						<p class="fw-normal mb-1">projecteur 5px version 5</p>
+						<p class="fw-normal mb-1">{{ equipment.getDescription() }}</p>
 						<p class="text-muted mb-0">IT department</p>
 					</td>
 					<td>
@@ -91,40 +85,7 @@ margin:5px
 						</button>
 					</td>
 				</tr>
-				<tr>
-					<td>
-						<div class="d-flex align-items-center">
-							<div class="ms-3">
-								<p class="fw-bold mb-1">rido</p>
-								<p class="text-muted mb-0">Projet 1</p>
-							</div>
-						</div>
-					</td>
-					<td>
-						<p class="fw-normal mb-1">Consultant</p>
-						<p class="text-muted mb-0">Finance</p>
-					</td>
-					<td>
-
-						<button type="button" class="btn btn-outline-danger btn-rounded" data-mdb-ripple-init data-mdb-ripple-color="dark">Disable</button>
-					</td>
-					<td>
-						<select class="form-select" aria-label="Default select example">
-							<option selected>Select project</option>
-							<option value="1">One</option>
-							<option value="2">Two</option>
-							<option value="3">Three</option>
-						</select>
-					</td>
-					<td>
-						<button type="button" class="btn btn-danger btn-floating" data-mdb-ripple-init data-mdb-ripple-color="dark">
-							<i class="fas fa-ban"></i>
-						</button>
-						<button type="button" class="btn btn-info btn-floating" data-mdb-ripple-init>
-							<i class="fas fa-magic"></i>
-						</button>
-					</td>
-				</tr>
+				  {% endfor %}
 
 			</tbody>
 		</table>

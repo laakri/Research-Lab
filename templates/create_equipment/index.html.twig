@@ -1,94 +1,98 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create Equipment
-{% endblock %}
+{% block title %}Create Equipment{% endblock %}
 
 {% block body %}
-	<style>
-		.btn-floating {
-			border-radius: 45%;
-			color: #fff;
-margin:5px
-		}
-        .form-outline{
-            margin:40px;
-            color:rgb(0, 11, 216);
+    <style>
+        .btn-floating {
+            border-radius: 45%;
+            color: #fff;
+            margin: 5px;
         }
-	</style>
 
-<div class="container mt-4">
-    <h1>Create Equipment</h1>
-    <form method="post" action="{{ path('create_equipment') }}">
-        <div class="mb-3">
-            <label class="form-label">Equipment Name</label>
-            <input type="text" class="form-control" name="equipment">
+        .form-outline {
+            margin: 40px;
+            color: rgb(0, 11, 216);
+        }
+    </style>
+
+    <div class="container mt-4">
+        <h1>Create Equipment</h1>
+        <form method="post" action="{{ path('create_equipment') }}">
+            <div class="mb-3">
+                <label class="form-label">Equipment Name</label>
+                <input type="text" class="form-control" name="equipment">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <input type="text" class="form-control" name="description">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <div class="container mt-4">
+        <h1>Liste d'équipements</h1>
+        <div class="form-outline" data-mdb-input-init>
+            <label class="form-label" for="form1">Search equipment</label>
+            <input type="search" id="form1" class="form-control" placeholder="Equipment" aria-label="Search"/>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Description</label>
-            <input type="text" class="form-control" name="description">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-</div>
-	<div class=" container mt-4">
-		<h1>Liste d'équipements</h1>
-<div class="form-outline" data-mdb-input-init>
-  <label class="form-label" for="form1">Search equipment</label>
-    <input type="search" id="form1" class="form-control" placeholder="Equipment" aria-label="Search" />
-  
-</div>
 
-		<table class="table align-middle mb-0 bg-white">
-			<thead class="bg-light">
-				<tr>
-					<th>Name Equipement</th>
-					<th>Description</th>
-					<th>Status</th>
-					<th>Affectation</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-			  {% for equipment in equipments %}
-				<tr>
-					<td>
-						<div class="d-flex align-items-center">
+        <table class="table align-middle mb-0 bg-white">
+            <thead class="bg-light">
+                <tr>
+                    <th>Name Equipement</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Affectation</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for equipment in equipments %}
+                    <tr>
+                        <td>{{ equipment.id }}</td>
+                        <td>{{ equipment.name }}</td>
+                        <td>{{ equipment.description }}</td>
+                        <td></td>
+                        <td>
+                            <a href="{{ path('equipment_delete', {'id': equipment.id}) }}" class="btn btn-danger btn-floating">
+                                <i class="fas fa-ban"></i>
+                            </a>
 
-							<div class="ms-3">
-								<p class="fw-bold mb-1">{{ equipment.getName() }}</p>
-								<p class="text-muted mb-0">Monsieur Nizar</p>
-							</div>
-						</div>
-					</td>
-					<td>
-						<p class="fw-normal mb-1">{{ equipment.getDescription() }}</p>
-						<p class="text-muted mb-0">IT department</p>
-					</td>
-					<td>
-						<button type="button" class="btn btn-outline-success btn-rounded" data-mdb-ripple-init data-mdb-ripple-color="dark">enable</button>
-					</td>
-					<td>
-						<select class="form-select" aria-label="Default select example">
-							<option selected>Select project</option>
-							<option value="1">One</option>
-							<option value="2">Two</option>
-							<option value="3">Three</option>
-						</select>
-					</td>
-					<td>
-						<button type="button" class="btn btn-danger btn-floating" data-mdb-ripple-init data-mdb-ripple-color="dark">
-							<i class="fas fa-ban"></i>
+                            <button type="button" class="btn btn-info btn-floating" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{ equipment.id }}">
+                                <i class="fas fa-magic"></i>
+                            </button>
 
-						</button>
-						<button type="button" class="btn btn-info btn-floating" data-mdb-ripple-init>
-							<i class="fas fa-magic"></i>
-						</button>
-					</td>
-				</tr>
-				  {% endfor %}
-
-			</tbody>
-		</table>
-	</div>
+                            <!-- Modal for each equipment -->
+                            <div class="modal fade" id="staticBackdrop_{{ equipment.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel_{{ equipment.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel_{{ equipment.id }}">Edit Equipment</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" action="{{ path('app_equipment_update', {'id': equipment.id}) }}">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Equipment Name</label>
+                                                    <input type="text" class="form-control" name="equipment" value="{{ equipment.name }}">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Description</label>
+                                                    <input type="text" class="form-control" name="description" value="{{ equipment.description }}">
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}

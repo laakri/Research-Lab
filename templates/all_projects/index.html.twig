@@ -6,24 +6,61 @@
         <h1>All Projects</h1>
 
         <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Researcher ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for project in projects %}
-                    <tr>
-                        <td>{{ project.id }}</td>
-                        <td>{{ project.name }}</td>
-                        <td>{{ project.description }}</td>
-                        <td>{{ project.researcherId is not null ? project.researcherId : 'N/A' }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Researcher ID</th>
+            <th>Action</th> <!-- Add a new column for the delete button -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+            <tr>
+                <td>{{ project.id }}</td>
+                <td>{{ project.name }}</td>
+                <td>{{ project.description }}</td>
+                 <td>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary" 
+                        data-toggle="modal" 
+                        onclick="showUserDropdown({{ project.id }})"
+                    >Select Principal Researcher
+                    </button>
+                <div id="userDropdownContainer"></div>
+
+                </td>   
+                <td>
+                    <a href="{{ path('app_delete_project', {'id': project.id}) }}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
     </div>
+    
+    <script>
+        function showUserDropdown(projectId) {
+            fetch(`/get/users`)
+                .then(response => response.json())
+                .then(data => {
+                    const dropdown = document.createElement('select');
+                    dropdown.name = 'researcherId';
+
+                    data.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.id;
+                        option.text = user.email;
+                        dropdown.appendChild(option);
+                    });
+
+                    const container = document.getElementById('userDropdownContainer');
+                    container.innerHTML = '';
+                    container.appendChild(dropdown);
+                });
+        }
+    </script>
 {% endblock %}

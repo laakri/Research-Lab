@@ -1,5 +1,4 @@
 <?php
-// src/Form/PublicationType.php
 
 namespace App\Form;
 

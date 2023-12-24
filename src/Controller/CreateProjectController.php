@@ -3,8 +3,9 @@
 // src/Controller/CreateProjectController.php
 
 namespace App\Controller;
-
+use App\Form\ProjectType;
 use App\Entity\Project;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,14 +17,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class CreateProjectController extends AbstractController
 {
     #[Route('/create/project', name: 'app_create_project')]
-    public function index(Request $request): Response
+    public function index(Request $request ,EntityManagerInterface $entityManager): Response
     {
-        // Use the createFormBuilder method with the form factory service
-        $form = $this->createFormBuilder()
-            ->add('name', TextType::class)
-            ->add('description', TextareaType::class)
-            ->getForm();
+        
+        $project = new Project();
 
+        $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -31,21 +30,16 @@ class CreateProjectController extends AbstractController
             $data = $form->getData();
 
             // Create a Project entity and set its values
-            $project = new Project();
-            $project->setName($data['name']);
-            $project->setDescription($data['description']);
 
-               // Persist the entity to the database
-               $entityManager = $this->getDoctrine()->getManager();  // <-- Check this line
-               $entityManager->persist($project);
-               $entityManager->flush();
-   
+            $entityManager->persist($project);
+            $entityManager->flush();
+            
 
             // Add a flash message for user feedback
             $this->addFlash('success', 'Project created successfully!');
 
             // Redirect to a route (you can customize this)
-            return $this->redirectToRoute('your_success_route');
+            return $this->redirectToRoute('app_all_projects');
         }
 
         // Render the form in your template

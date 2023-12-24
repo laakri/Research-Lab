@@ -2,30 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\Project;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Faker\Factory;
+use Doctrine\ORM\EntityManagerInterface;
+
 
 class AllProjectsController extends AbstractController
 {
     #[Route('/all/projects', name: 'app_all_projects')]
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager): Response
     {
-        $faker = Factory::create();
-
-        // Generate some fake projects for testing
-        $fakeProjects = [];
-        for ($i = 1; $i <= 10; $i++) {
-            $fakeProjects[] = [
-                'id' => $i,
-                'name' => $faker->words(3, true),
-                'description' => $faker->sentence(),
-            ];
-        }
+        // Get all projects from the database
+        $projects = $entityManager->getRepository(Project::class)->findAll();
 
         return $this->render('all_projects/index.html.twig', [
-            'fakeProjects' => $fakeProjects,
+            'projects' => $projects,
         ]);
     }
 }

@@ -1,50 +1,37 @@
 <?php
+
 namespace App\Entity;
+
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use App\Repository\ProjectRepository;
-
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
-
 class Project
 {
-    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-
-     
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 35, nullable: true)]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $researcherId = null;
 
-    #[ORM\OneToMany(mappedBy: 'projet', targetEntity: Publication::class)]
+    #[ORM\OneToMany(mappedBy: 'projet', targetEntity: Publication::class, cascade: ['persist', 'remove'])]
     private Collection $publications;
 
     public function __construct()
     {
         $this->publications = new ArrayCollection();
     }
-
-
-
-    // Getters and Setters
 
     public function getId(): ?int
     {
@@ -56,7 +43,7 @@ class Project
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -68,20 +55,19 @@ class Project
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
- 
     public function getResearcherId(): ?int
     {
         return $this->researcherId;
     }
 
-    public function setResearcherId(?int $researcherId): self
+    public function setResearcherId(?int $researcherId): static
     {
         $this->researcherId = $researcherId;
 
@@ -117,7 +103,4 @@ class Project
 
         return $this;
     }
-
-   
-  
 }

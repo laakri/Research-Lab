@@ -3,8 +3,9 @@
 // src/Controller/CreateProjectController.php
 
 namespace App\Controller;
-
+use App\Form\ProjectType;
 use App\Entity\Project;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,25 +14,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class CreateProjectController extends AbstractController
 {
     #[Route('/create/project', name: 'app_create_project')]
-    public function index(Request $request): Response
+    public function index(Request $request ,EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createFormBuilder()
-            ->add('name')
-            ->add('description')
-            ->getForm();
 
+        $project = new Project();
+
+        $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             // Create a Project entity and set its values
-            $project = new Project();
-            $project->setName($data['name']);
-            $project->setDescription($data['description']);
 
-            // Persist the entity to the database
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($project);
             $entityManager->flush();
 

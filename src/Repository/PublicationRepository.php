@@ -20,6 +20,21 @@ class PublicationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Publication::class);
     }
+    
+    /**
+     * @return Publication[]
+     */
+    public function findAllWithProjects(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->addSelect('project')
+            ->leftJoin('p.projet', 'project')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+  
 
 //    /**
 //     * @return Publication[] Returns an array of Publication objects

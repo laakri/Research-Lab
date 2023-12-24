@@ -22,6 +22,7 @@ class Publication
 
     #[ORM\ManyToOne(inversedBy: 'publications')]
     private ?Project $projet = null;
+  
 
     public function getId(): ?int
     {

@@ -31,3 +31,12 @@ project_details:
 create_equipment:
   path: /create-equipment
   controller: App\Controller\CreateEquipmentController::index
+
+project_list:
+    path: /projects
+    controller: App\Controller\ProjectController::listProjects
+    
+add_publication:
+    path: /add-publication
+    controller: App\Controller\AddPublicationController::index
+    methods: ['GET', 'POST']

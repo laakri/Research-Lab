@@ -2,41 +2,36 @@
 
 namespace App\Entity;
 
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Repository\ProjectRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: ProjectRepository::class)]
 class Project
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(length: 35, nullable: true)]
     private ?string $name = null;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private ?string $publications = null;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $researcherId = null;
 
-    // Getters and Setters
+    #[ORM\OneToMany(mappedBy: 'projet', targetEntity: Publication::class, cascade: ['persist', 'remove'])]
+    private Collection $publications;
+
+    public function __construct()
+    {
+        $this->publications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -48,7 +43,7 @@ class Project
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -60,21 +55,9 @@ class Project
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getPublications(): ?string
-    {
-        return $this->publications;
-    }
-
-    public function setPublications(?string $publications): self
-    {
-        $this->publications = $publications;
 
         return $this;
     }
@@ -84,9 +67,39 @@ class Project
         return $this->researcherId;
     }
 
-    public function setResearcherId(?int $researcherId): self
+    public function setResearcherId(?int $researcherId): static
     {
         $this->researcherId = $researcherId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Publication>
+     */
+    public function getPublications(): Collection
+    {
+        return $this->publications;
+    }
+
+    public function addPublication(Publication $publication): static
+    {
+        if (!$this->publications->contains($publication)) {
+            $this->publications->add($publication);
+            $publication->setProjet($this);
+        }
+
+        return $this;
+    }
+
+    public function removePublication(Publication $publication): static
+    {
+        if ($this->publications->removeElement($publication)) {
+            // set the owning side to null (unless already changed)
+            if ($publication->getProjet() === $this) {
+                $publication->setProjet(null);
+            }
+        }
 
         return $this;
     }

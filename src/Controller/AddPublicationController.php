@@ -10,13 +10,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
+use App\Repository\ProjectRepository;
+
 
 class AddPublicationController extends AbstractController
 {
     /**
  * @Route("/add-publication", name="index")
  */
-public function index( Request $request, PersistenceManagerRegistry $doctrine): Response
+public function index( Request $request, PersistenceManagerRegistry $doctrine , ProjectRepository $projectRepository): Response
 {
     {
         $publication = new Publication();
@@ -33,8 +35,19 @@ public function index( Request $request, PersistenceManagerRegistry $doctrine): 
             // Optionally, add a flash message to indicate success
             $this->addFlash('success', 'Publication added successfully.');
 
-            //return $this->redirectToRoute('index');
+           // return $this->redirectToRoute('index');
         }
+          // Fetch all publications along with their projects
+          $publications = $doctrine->getRepository(Publication::class)->findAllWithProjects();
+
+           // Fetch project choices
+        $projectChoices = $projectRepository->findAll();
+
+        return $this->render('add_publication/index.html.twig', [
+            'form' => $form->createView(),
+            'publications' => $publications,
+            'project_choices' => $projectChoices,
+        ]);
 
         return $this->render('add_publication/index.html.twig', [
             'form' => $form->createView(),

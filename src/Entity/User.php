@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -29,6 +30,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\OneToMany(mappedBy: 'principalResearcher', targetEntity: Project::class)]
+    private Collection $principalProjects;
+
+    #[ORM\ManyToMany(mappedBy: 'researchers', targetEntity: Project::class)]
+    private Collection $projects;
+
+    public function __construct()
+    {
+        $this->principalProjects = new ArrayCollection();
+        $this->projects = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -47,8 +60,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * A visual identifier that represents this user.
-     *
      * @see UserInterface
      */
     public function getUserIdentifier(): string
@@ -97,5 +108,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getPrincipalProjects(): Collection
+    {
+        return $this->principalProjects;
+    }
+
+    /**
+     * @return Collection<int, Project>
+     */
+    public function getProjects(): Collection
+    {
+        return $this->projects;
     }
 }

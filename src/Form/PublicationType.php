@@ -1,5 +1,4 @@
 <?php
-// src/Form/PublicationType.php
 
 namespace App\Form;
 
@@ -31,6 +30,8 @@ class PublicationType extends AbstractType
             'data_class' => Publication::class,
         ]);
     }
+
+    
 
 }
 ?>

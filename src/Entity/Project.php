@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\ProjectRepository;
@@ -25,12 +24,19 @@ class Project
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $researcherId = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'principalProjects')]
+    private ?User $principalResearcher = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'projects')]
+    private Collection $researchers;
+
     #[ORM\OneToMany(mappedBy: 'projet', targetEntity: Publication::class, cascade: ['persist', 'remove'])]
     private Collection $publications;
 
     public function __construct()
     {
         $this->publications = new ArrayCollection();
+        $this->researchers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,6 +76,43 @@ class Project
     public function setResearcherId(?int $researcherId): static
     {
         $this->researcherId = $researcherId;
+
+        return $this;
+    }
+
+    public function getPrincipalResearcher(): ?User
+    {
+        return $this->principalResearcher;
+    }
+
+    public function setPrincipalResearcher(?User $principalResearcher): static
+    {
+        $this->principalResearcher = $principalResearcher;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getResearchers(): Collection
+    {
+        return $this->researchers;
+    }
+
+    public function addResearcher(User $researcher): static
+    {
+        if (!$this->researchers->contains($researcher)) {
+            $this->researchers->add($researcher);
+            // You might want to add some additional logic here, like setting roles for the researcher
+        }
+
+        return $this;
+    }
+
+    public function removeResearcher(User $researcher): static
+    {
+        $this->researchers->removeElement($researcher);
 
         return $this;
     }

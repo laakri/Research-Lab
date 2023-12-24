@@ -39,7 +39,7 @@ class CreateProjectController extends AbstractController
             $this->addFlash('success', 'Project created successfully!');
 
             // Redirect to a route (you can customize this)
-            return $this->redirectToRoute('your_success_route');
+            return $this->redirectToRoute('app_all_projects');
         }
 
         // Render the form in your template

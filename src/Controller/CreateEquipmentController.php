@@ -75,4 +75,30 @@ class CreateEquipmentController extends AbstractController
         
         return $this->redirectToRoute('create_equipment');
     }
+
+    #[Route('/equipment/disponibility/{id}', name: 'app_equipment_dispo')]
+    public function statusEquipment(Request $request, EntityManagerInterface $entityManager, int $id)
+    {
+        $equipment = $entityManager->getRepository(Equipments::class)->find($id);
+    
+        if (!$equipment) {
+            throw $this->createNotFoundException('Equipment not found');
+        }
+    
+        $disponibility = $request->request->get('is_active');
+        $equipment->setDisponibility($disponibility);
+    
+        $entityManager->flush();
+    
+        $status = $disponibility == 0 ? 'Pas Active' : 'Active';
+    
+        return $this->json([
+            'response' => 'success',
+            'message' => 'Status updated successfully',
+            'id' => $id,
+            'status' => $status,
+        ]);
+    }
+    
+    
 }

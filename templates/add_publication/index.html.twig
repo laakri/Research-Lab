@@ -7,7 +7,6 @@
 {% block body %}
 <style>
     .publication {
-        display: flex;
         border: 1px solid #ddd;
         padding: 20px;
     }
@@ -16,28 +15,29 @@
         margin-right: 20px;
         border: 1px solid #ddd;
         padding: 15px;
-        box-shadow: 1px 1px 3px #888888; /* 3D effect */
+        box-shadow: 1px 1px 3px #888888; 
+        width:70% ; 
+        margin:auto ;
+        margin-bottom : 2rem ; 
     }
 
     .listPublication {
+        margin:auto ;
         width: 70%;
         border: 1px solid #ddd;
         padding: 15px;
-        box-shadow: 1px 1px 3px #888888; /* 3D effect */
+        box-shadow: 1px 1px 3px #888888; 
     }
 
-    /* Style for the form */
     form {
         margin-bottom: 20px;
     }
 
-    /* Style for the filter dropdown */
     #projectFilter {
         width: 100%;
         margin-bottom: 10px;
     }
 
-    /* Style for the publication list table */
     table {
         width: 100%;
         border-collapse: collapse;
@@ -91,7 +91,7 @@
         </form>
 
         <table class="table table-bordered">
-            {# Table headers... #}
+        
             <thead>
                 <tr>
                     <th scope="col">#</th>

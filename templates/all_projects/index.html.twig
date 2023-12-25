@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    
     <div class="container mt-4">
+
         <h1>All Projects</h1>
 
         <table class="table">
@@ -11,9 +13,12 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Principal Researcher ID</th>
+                    <th></th>
                     <th>Second Researcher ID</th>
-                    <th>Select</th>
-                    <th>Action</th>
+                    <th></th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -23,7 +28,6 @@
                         <td>{{ project.name }}</td>
                         <td>{{ project.description }}</td>
                         <td>{{ project.principalResearcher ? project.principalResearcher.email : 'N/A' }}</td>
-                        <td>{{ project.researchers.first ? project.researchers.first.email : 'N/A' }}</td>
                         <td>
                             <button 
                                 type="button" 
@@ -31,10 +35,14 @@
                                 data-toggle="modal" 
                                 onclick="showUserDropdown({{ project.id }}, 'principal')"
                             >
-                                Principal Researcher
+                                add
                             </button>
                            
-                        </td> 
+                        </td>
+                        
+                        <td>{{ project.researchers.first ? project.researchers.first.email : 'N/A' }}</td>
+                        
+                         
                         <td>
                          <button 
                                 type="button" 
@@ -42,9 +50,19 @@
                                 data-toggle="modal" 
                                 onclick="showUserDropdown({{ project.id }}, 'second')"
                             >
-                                Researchers
+                                add
                             </button>
                         </td>  
+                        <td>
+                            <button 
+                                type="button" 
+                                class="btn btn-info" 
+                                data-toggle="modal" 
+                                onclick="showEditPopup({{ project.id }})"
+                            >
+                                Edit
+                            </button>
+                        </td>
                         <td>
                             <a href="{{ path('app_delete_project', {'id': project.id}) }}" class="btn btn-danger">Delete</a>
                         </td>
@@ -74,6 +92,89 @@
         </div>
     </div>
 
+<div class="modal fade" id="editProjectModal" tabindex="-1" role="dialog" aria-labelledby="editProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProjectModalLabel">Edit Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProjectForm">
+                    <div class="mb-3">
+                        <label for="editProjectName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editProjectName" name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProjectDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editProjectDescription" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="confirmEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    let editProjectId; // Declare a variable to store the current project ID
+
+    function showEditPopup(projectId) {
+        editProjectId = projectId; // Store the current project ID
+
+        // Retrieve the current project's name and description
+        const projectName = $('#name_' + projectId).text();
+        const projectDescription = $('#description_' + projectId).text();
+
+        // Set the values in the edit form
+        $('#editProjectName').val(projectName);
+        $('#editProjectDescription').val(projectDescription);
+
+        // Show the edit project modal
+        $('#editProjectModal').modal('show');
+    }
+
+    function confirmEdit() {
+        // Retrieve the edited values from the form
+        const editedName = $('#editProjectName').val();
+        const editedDescription = $('#editProjectDescription').val();
+
+        // You may want to send an AJAX request to update the database
+        // For simplicity, I'll assume you have a function named updateProject
+        // that you can implement to update the database
+        updateProject(editProjectId, editedName, editedDescription);
+
+        // Update the name and description in the table
+        $('#name_' + editProjectId).text(editedName);
+        $('#description_' + editProjectId).text(editedDescription);
+
+        // Close the modal
+        $('#editProjectModal').modal('hide');
+    }
+
+    function updateProject(projectId, editedName, editedDescription) {
+    console.log(`Project ID: ${projectId}, Edited Name: ${editedName}, Edited Description: ${editedDescription}`);
+
+    fetch(`/edit/project/${projectId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            editedName: editedName,
+            editedDescription: editedDescription,
+        }),
+    })
+    .then(response => response.json())
+    
+    
+}
+
+</script>
     <script>
     let currentProjectId; // Declare a variable to store the current project ID
     let currentRole; // Declare a variable to store the current researcher role
@@ -137,7 +238,6 @@
             console.log(`Server response for ${currentRole} researcher:`, data);
         })
         .catch(error => {
-            console.error(`Error updating ${currentRole} researcher:`, error);
         });
     }
 </script>

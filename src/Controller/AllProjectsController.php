@@ -115,4 +115,22 @@ class AllProjectsController extends AbstractController
         
         return $this->json($data);
     }
+    #[Route('/edit/project/{id}', name: 'app_edit_project')]
+    public function editProject(Request $request, EntityManagerInterface $entityManager, Project $project): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        // Retrieve the edited name and description from the request data
+        $editedName = $data['editedName'] ?? null;
+        $editedDescription = $data['editedDescription'] ?? null;
+
+        // Update the project's name and description
+        $project->setName($editedName);
+        $project->setDescription($editedDescription);
+
+        // Save changes to the database
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_all_projects');
+    }
 }

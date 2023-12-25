@@ -33,15 +33,14 @@ create_equipment:
   controller: App\Controller\CreateEquipmentController::index
 
 project_list:
-    path: /projects
-    controller: App\Controller\ProjectController::listProjects
-    
+  path: /projects
+  controller: App\Controller\ProjectController::listProjects
+
 add_publication:
-    path: /add-publication
-    controller: App\Controller\AddPublicationController::index
-    methods: ['GET', 'POST']
+  path: /add-publication
+  controller: App\Controller\AddPublicationController::index
+  methods: ["GET", "POST"]
 
 delete_publication:
-    path: /delete-publication/{id}
-    controller: App\Controller\AddPublicationController::delete
-
+  path: /delete-publication/{id}
+  controller: App\Controller\AddPublicationController::delete

@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -23,6 +23,21 @@ class RegistrationFormType extends AbstractType
                 'constraints' => [
                     new IsTrue([
                         'message' => 'You should agree to our terms.',
+                    ]),
+                ],
+            ])
+            ->add('roles', ChoiceType::class, [
+                'mapped' => false,
+                'choices' => [
+                    'Role admin' => 'ROLE_ADMIN',
+                    'Role user' => 'ROLE_USER',
+                    // Add more roles as needed
+                ],
+                'expanded' => true,
+                'multiple' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please select at least one role.',
                     ]),
                 ],
             ])

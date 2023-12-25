@@ -85,19 +85,27 @@
         <table class="table">
             {# Table headers... #}
 
-            <tbody>
-                {% for publication in publications %}
-                    {# Check if the project filter matches or is not set #}
-                    {% if not app.request.query.get('projectFilter') or app.request.query.get('projectFilter') == publication.getProjet().getId() %}
-                        <tr>
-                            <th scope="row">{{ loop.index }}</th>
-                            <td>{{ publication.getTitle() }}</td>
-                            <td>{{ publication.getProjet().getName() }}</td>
-                            <td>{{ publication.getDateP()|date('Y-m-d') }}</td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            </tbody>
+          <tbody>
+    {% for publication in publications %}
+        {# Check if the project filter matches or is not set #}
+        {% if not app.request.query.get('projectFilter') or app.request.query.get('projectFilter') == publication.getProjet().getId() %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ publication.getTitle() }}</td>
+                <td>{{ publication.getProjet().getName() }}</td>
+                <td>{{ publication.getDateP()|date('Y-m-d') }}</td>
+                <td>
+                   <a href="{{ path('delete_publication', {'id': publication.getId()}) }}"
+   class="btn btn-danger btn-sm"
+   title="Delete"
+   onclick="return confirm('Are you sure you want to delete this publication?')">
+    <i class="fas fa-trash-alt"></i>
+</a>
+                </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</tbody>
         </table>
     </div>
     </div>

@@ -40,3 +40,8 @@ add_publication:
     path: /add-publication
     controller: App\Controller\AddPublicationController::index
     methods: ['GET', 'POST']
+
+delete_publication:
+    path: /delete-publication/{id}
+    controller: App\Controller\AddPublicationController::delete
+

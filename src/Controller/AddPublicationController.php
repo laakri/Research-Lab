@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use App\Repository\ProjectRepository;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 
 class AddPublicationController extends AbstractController
@@ -31,16 +33,12 @@ public function index( Request $request, PersistenceManagerRegistry $doctrine , 
             $entityManager = $doctrine->getManager();
             $entityManager->persist($publication);
             $entityManager->flush();
-
-            // Optionally, add a flash message to indicate success
             $this->addFlash('success', 'Publication added successfully.');
 
            // return $this->redirectToRoute('index');
         }
-          // Fetch all publications along with their projects
           $publications = $doctrine->getRepository(Publication::class)->findAllWithProjects();
 
-           // Fetch project choices
         $projectChoices = $projectRepository->findAll();
 
         return $this->render('add_publication/index.html.twig', [
@@ -53,5 +51,26 @@ public function index( Request $request, PersistenceManagerRegistry $doctrine , 
             'form' => $form->createView(),
         ]);
     }
-}}
+}
+   /**
+     * @Route("/delete-publication/{id}", name="delete_publication", methods={"POST"})
+     */
+    public function delete(int $id , PersistenceManagerRegistry $doctrine): HttpFoundationResponse
+    {
+        $entityManager = $doctrine->getManager();
+        $publication = $entityManager->getRepository(Publication::class)->find($id);
+
+        if (!$publication) {
+            throw $this->createNotFoundException('Publication not found');
+        }
+
+        $entityManager->remove($publication);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Publication deleted successfully.');
+
+        return $this->redirectToRoute('add_publication');
+    }
+
+}
 ?>

@@ -18,8 +18,10 @@ class Project
     #[ORM\Column(length: 35, nullable: true)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $description = null;
+/**
+ * @ORM\Column(type="string", length=255, nullable=true)
+ */
+private $description;
 
    
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'principalProjects')]

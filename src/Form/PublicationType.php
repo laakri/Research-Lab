@@ -4,8 +4,12 @@ namespace App\Form;
 
 use App\Entity\Publication;
 use App\Entity\Project; 
+use App\Entity\User ;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PublicationType extends AbstractType
 {
-    
+ 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -21,7 +25,12 @@ class PublicationType extends AbstractType
             ->add('projet', EntityType::class, [
                 'class' => Project::class,
                 'choice_label' => 'name', // adjust this based on your Project entity properties
+            ])
+            ->add('chercheur', EntityType::class, [
+                'class' => 'App\Entity\User',
+                'choice_label' => 'email', // adjust this based on your User entity
             ]);
+        
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -36,10 +36,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(mappedBy: 'researchers', targetEntity: Project::class)]
     private Collection $projects;
 
+    #[ORM\OneToMany(mappedBy: 'chercheur', targetEntity: Publication::class)]
+    private Collection $publications;
+
     public function __construct()
     {
         $this->principalProjects = new ArrayCollection();
         $this->projects = new ArrayCollection();
+        $this->publications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,5 +128,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getProjects(): Collection
     {
         return $this->projects;
+    }
+
+    /**
+     * @return Collection<int, Publication>
+     */
+    public function getPublications(): Collection
+    {
+        return $this->publications;
+    }
+
+    public function addPublication(Publication $publication): static
+    {
+        if (!$this->publications->contains($publication)) {
+            $this->publications->add($publication);
+            $publication->setChercheur($this);
+        }
+
+        return $this;
+    }
+
+    public function removePublication(Publication $publication): static
+    {
+        if ($this->publications->removeElement($publication)) {
+            // set the owning side to null (unless already changed)
+            if ($publication->getChercheur() === $this) {
+                $publication->setChercheur(null);
+            }
+        }
+
+        return $this;
     }
 }

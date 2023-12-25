@@ -25,6 +25,9 @@ class Publication
 
     #[ORM\ManyToOne(inversedBy: 'publications')]
     private ?User $chercheur = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
   
 
     public function getId(): ?int
@@ -76,6 +79,19 @@ class Publication
     public function setChercheur(?user $chercheur): static
     {
         $this->chercheur = $chercheur;
+
+        return $this;
+    }
+
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

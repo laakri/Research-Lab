@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Project;
 use App\Entity\User;
+
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,18 +39,30 @@ class AllProjectsController extends AbstractController
         // Redirect back to the project list
         return $this->redirectToRoute('app_all_projects');
     }
-    #[Route('/select-researcher/{projectId}', name: 'app_select_researcher')]
-    public function selectResearcher(Project $project, Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(ProjectUserType::class);
-        $form->handleRequest($request);
+    #[Route('/select-researcher/{projectId}/{researcherId}', name: 'app_select_researcher')]
+        public function selectResearcher(
+            EntityManagerInterface $entityManager,
+            int $projectId,
+            int $researcherId
+        ): Response {
+            // Manually retrieve the Project entity
+            $project = $entityManager->getRepository(Project::class)->find($projectId);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $researcher = $data['researcher'];
+            // Check if the project is found
+            if (!$project) {
+                throw $this->createNotFoundException('Project not found');
+            }
+
+            // Manually retrieve the User entity for the selected researcher
+            $researcher = $entityManager->getRepository(User::class)->find($researcherId);
+
+            // Check if the researcher is found
+            if (!$researcher) {
+                throw $this->createNotFoundException('Researcher not found');
+            }
 
             // Update the project's principal researcher
-            $project->setResearcherId($researcher->getId());
+            $project->setPrincipalResearcher($researcher);
             $entityManager->flush();
 
             // Add a flash message for success
@@ -57,7 +71,9 @@ class AllProjectsController extends AbstractController
             // Redirect back to the project list
             return $this->redirectToRoute('app_all_projects');
         }
-    }
+
+    
+
     #[Route('/get/users', name: 'app_get_users')]
     public function getUsers(EntityManagerInterface $entityManager): JsonResponse
     {

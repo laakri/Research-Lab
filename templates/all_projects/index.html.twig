@@ -12,55 +12,121 @@
             <th>Name</th>
             <th>Description</th>
             <th>Researcher ID</th>
+            <th>Select</th>
             <th>Action</th> <!-- Add a new column for the delete button -->
         </tr>
     </thead>
     <tbody>
-        {% for project in projects %}
-            <tr>
-                <td>{{ project.id }}</td>
-                <td>{{ project.name }}</td>
-                <td>{{ project.description }}</td>
-                 <td>
-                    <button 
-                        type="button" 
-                        class="btn btn-primary" 
-                        data-toggle="modal" 
-                        onclick="showUserDropdown({{ project.id }})"
-                    >Select Principal Researcher
-                    </button>
-                <div id="userDropdownContainer"></div>
+    {% for project in projects %}
+        <tr>
+            <td>{{ project.id }}</td>
+            <td>{{ project.name }}</td>
+            <td>{{ project.description }}</td>
+            <td id="researcherId_{{ project.id }}">{{ project.researcherId }}</td>
+            <td>
+                <button 
+                    type="button" 
+                    class="btn btn-primary" 
+                    data-toggle="modal" 
+                    onclick="showUserDropdown({{ project.id }})"
+                >
+                    Select Principal Researcher
+                </button>
+            </td>   
+            <td>
+                <a href="{{ path('app_delete_project', {'id': project.id}) }}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+</tbody>
 
-                </td>   
-                <td>
-                    <a href="{{ path('app_delete_project', {'id': project.id}) }}" class="btn btn-danger">Delete</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </tbody>
 </table>
 
     </div>
-    
-    <script>
-        function showUserDropdown(projectId) {
-            fetch(`/get/users`)
-                .then(response => response.json())
-                .then(data => {
-                    const dropdown = document.createElement('select');
-                    dropdown.name = 'researcherId';
+    <!-- Add this modal structure at the end of your HTML, before the closing </body> tag -->
+<div class="modal fade" id="userDropdownModal" tabindex="-1" role="dialog" aria-labelledby="userDropdownModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDropdownModalLabel">Select Principal Researcher</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="userDropdownContainer">
+                <!-- Dropdown content will be inserted here -->
+            </div>
+           <!-- ... Your existing modal structure ... -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="confirmButton">Confirm</button>
+        </div>
 
-                    data.forEach(user => {
-                        const option = document.createElement('option');
-                        option.value = user.id;
-                        option.text = user.email;
-                        dropdown.appendChild(option);
-                    });
+        </div>
+    </div>
+</div>
 
-                    const container = document.getElementById('userDropdownContainer');
-                    container.innerHTML = '';
-                    container.appendChild(dropdown);
+<script>
+    function showUserDropdown(projectId) {
+        fetch(`/get/users`)
+            .then(response => response.json())
+            .then(data => {
+                const dropdown = document.createElement('select');
+                dropdown.name = 'researcherId';
+
+                data.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.text = user.email;
+                    dropdown.appendChild(option);
                 });
-        }
-    </script>
+
+                const modalContent = document.createElement('div');
+                modalContent.appendChild(dropdown);
+
+                $('#userDropdownModal').modal('show');
+                $('#userDropdownContainer').html(modalContent.innerHTML);
+
+                // Add an event listener to handle the user selection
+                dropdown.addEventListener('change', function () {
+                    const selectedUserId = this.value;
+
+                    // Update the researcher ID in the table
+                    document.getElementById(`researcherId_${projectId}`).textContent = selectedUserId;
+
+                    // Enable the Confirm button
+                    $('#confirmButton').prop('disabled', false);
+                });
+
+                // Add an event listener to handle the Confirm button click
+                $('#confirmButton').on('click', function () {
+                    const selectedUserId = dropdown.value;
+
+                    // You may want to send an AJAX request to update the database as well
+                    // For simplicity, I'll assume you have a function named updateResearcherId
+                    // that you can implement to update the database
+                    updateResearcherId(projectId, selectedUserId);
+
+                    // Close the modal
+                    $('#userDropdownModal').modal('hide');
+                });
+            });
+    }
+
+   function updateResearcherId(projectId, researcherId) {
+    console.log(`Project ID: ${projectId}, Researcher ID: ${researcherId}`);
+
+    fetch(`/select-researcher/${projectId}/${researcherId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+    })
+}
+
+
+</script>
+
+
 {% endblock %}

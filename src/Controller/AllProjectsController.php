@@ -39,7 +39,33 @@ class AllProjectsController extends AbstractController
         // Redirect back to the project list
         return $this->redirectToRoute('app_all_projects');
     }
-    #[Route('/select-researcher/{projectId}/{researcherId}', name: 'app_select_researcher')]
+    #[Route('/select-second-researcher/{projectId}/{researcherId}', name: 'app_select_second_researcher')]
+        public function selectSecondResearcher(
+            EntityManagerInterface $entityManager,
+            int $projectId,
+            int $researcherId
+        ): Response {
+            $project = $entityManager->getRepository(Project::class)->find($projectId);
+
+            if (!$project) {
+                throw $this->createNotFoundException('Project not found');
+            }
+
+            $researcher = $entityManager->getRepository(User::class)->find($researcherId);
+
+            if (!$researcher) {
+                throw $this->createNotFoundException('Researcher not found');
+            }
+
+            $project->addResearcher($researcher);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Second Researcher selected successfully!');
+
+            return $this->redirectToRoute('app_all_projects');
+        }
+
+    #[Route('/select-principal-researcher/{projectId}/{researcherId}', name: 'app_select_researcher')]
         public function selectResearcher(
             EntityManagerInterface $entityManager,
             int $projectId,

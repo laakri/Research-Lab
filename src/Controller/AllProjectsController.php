@@ -17,14 +17,22 @@ class AllProjectsController extends AbstractController
 {
     #[Route('/all/projects', name: 'app_all_projects')]
     public function index(EntityManagerInterface $entityManager): Response
-    {
+    {            
+        if ($this->isGranted('ROLE_ADMIN')) {
+
         // Get all projects from the database
         $projects = $entityManager->getRepository(Project::class)->findAll();
         return $this->render('all_projects/index.html.twig', [
             'projects' => $projects,
             
         ]);
+        }
+        else{
+            return $this->redirectToRoute('app_home_page');
+        }
     }
+
+
 
     #[Route('/delete/project/{id}', name: 'app_delete_project')]
     public function deleteProject(Project $project, EntityManagerInterface $entityManager): RedirectResponse

@@ -15,6 +15,7 @@ class UsersController extends AbstractController
     #[Route('/users', name: 'app_users')]
     public function index(EntityManagerInterface $entityManager): Response
     {
+            if ($this->isGranted('ROLE_ADMIN')) {
         // Get all users from the database
         $users = $entityManager->getRepository(User::class)->findAll();
 
@@ -22,6 +23,10 @@ class UsersController extends AbstractController
             'controller_name' => 'UsersController',
             'users' => $users,
         ]);
+        }
+        else{
+            return $this->redirectToRoute('app_home_page');
+        }
     }
     #[Route('/delete/user/{id}', name: 'app_delete_user')]
     public function deleteUser(User $user, EntityManagerInterface $entityManager): Response

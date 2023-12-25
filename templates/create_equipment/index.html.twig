@@ -1,98 +1,132 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Create Equipment{% endblock %}
+{% block title %}Create Equipment
+{% endblock %}
 
 {% block body %}
-    <style>
-        .btn-floating {
-            border-radius: 45%;
-            color: #fff;
-            margin: 5px;
+	<style>
+		.btn-floating {
+			border-radius: 45%;
+			color: #fff;
+			margin: 5px;
+		}
+
+		.form-outline {
+			margin: 40px;
+			color: rgb(0, 11, 216);
+		}
+        .fle{
+            displays:flex;
         }
+	</style>
 
-        .form-outline {
-            margin: 40px;
-            color: rgb(0, 11, 216);
+	<div class="container mt-4">
+		<h1>Create Equipment</h1>
+		<form method="post" action="{{ path('create_equipment') }}">
+			<div class="mb-3">
+				<label class="form-label">Equipment Name</label>
+				<input type="text" class="form-control" name="equipment">
+			</div>
+			<div class="mb-3">
+				<label class="form-label">Description</label>
+				<input type="text" class="form-control" name="description">
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+
+	<div class="container mt-4">
+		<h1>Liste d'équipements</h1>
+		<div class="form-outline" data-mdb-input-init>
+			<label class="form-label" for="form1">Search equipment</label>
+			<input type="search" id="form1" class="form-control" placeholder="Equipment" aria-label="Search"/>
+		</div>
+
+		<table class="table align-middle mb-0 bg-white">
+			<thead class="bg-light">
+				<tr>
+					<th>Name Equipement</th>
+					<th>Description</th>
+					<th>Status</th>
+					<th>Disponibilité</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for equipment in equipments %}
+					<tr>
+						<td>{{ equipment.id }}</td>
+						<td>{{ equipment.name }}</td>
+						<td>{{ equipment.description }}</td>
+						<td>
+                        
+							<div class="custom-control custom-switch switch-primary switch-md  fle" style="margin:8px">
+                              <span   id="status_{{equipment.id}}" class="badge badge-{{equipment.disponibility ==1 ? 'success': 'danger'}} rounded-pill d-inline">{{equipment.disponibility ==1 ? 'Active': 'Pas active'}}</span>
+								<input value="{{ equipment.id }}" onchange="updateStatus(this)" type="checkbox" class="custom-control-input" id="switch-s{{ equipment.id }}" {{ equipment.disponibility ? 'checked' : '' }}>
+								<label class="custom-control-label" for="switch-s{{equipment.id}}"></label>
+							</div>
+                            
+						</td>
+						<td>
+							<a href="{{ path('equipment_delete', {'id': equipment.id}) }}" class="btn btn-danger btn-floating">
+								<i class="fas fa-ban"></i>
+							</a>
+
+							<button type="button" class="btn btn-info btn-floating" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{ equipment.id }}">
+								<i class="fas fa-magic"></i>
+							</button>
+
+							<!-- Modal for each equipment -->
+							<div class="modal fade" id="staticBackdrop_{{ equipment.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel_{{ equipment.id }}" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="staticBackdropLabel_{{ equipment.id }}">Edit Equipment</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<form method="post" action="{{ path('app_equipment_update', {'id': equipment.id}) }}">
+												<div class="mb-3">
+													<label class="form-label">Equipment Name</label>
+													<input type="text" class="form-control" name="equipment" value="{{ equipment.name }}">
+												</div>
+												<div class="mb-3">
+													<label class="form-label">Description</label>
+													<input type="text" class="form-control" name="description" value="{{ equipment.description }}">
+												</div>
+												<button type="submit" class="btn btn-primary">Submit</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+        {% block javascripts %}
+    <script>
+        function updateStatus(checkbox) {
+            var equipmentId = checkbox.value;
+            var isChecked = checkbox.checked ? 1 : 0;
+
+            // Make an AJAX request to update the status
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ path('app_equipment_dispo', {'id': '__id__'}) }}'.replace('__id__', equipmentId), true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Handle the response if needed
+                    var response = JSON.parse(xhr.responseText);
+                    console.log(response);
+                }
+            };
+            xhr.send('is_active=' + isChecked);
         }
-    </style>
+    </script>
+{% endblock %}
 
-    <div class="container mt-4">
-        <h1>Create Equipment</h1>
-        <form method="post" action="{{ path('create_equipment') }}">
-            <div class="mb-3">
-                <label class="form-label">Equipment Name</label>
-                <input type="text" class="form-control" name="equipment">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Description</label>
-                <input type="text" class="form-control" name="description">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
-
-    <div class="container mt-4">
-        <h1>Liste d'équipements</h1>
-        <div class="form-outline" data-mdb-input-init>
-            <label class="form-label" for="form1">Search equipment</label>
-            <input type="search" id="form1" class="form-control" placeholder="Equipment" aria-label="Search"/>
-        </div>
-
-        <table class="table align-middle mb-0 bg-white">
-            <thead class="bg-light">
-                <tr>
-                    <th>Name Equipement</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Affectation</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for equipment in equipments %}
-                    <tr>
-                        <td>{{ equipment.id }}</td>
-                        <td>{{ equipment.name }}</td>
-                        <td>{{ equipment.description }}</td>
-                        <td></td>
-                        <td>
-                            <a href="{{ path('equipment_delete', {'id': equipment.id}) }}" class="btn btn-danger btn-floating">
-                                <i class="fas fa-ban"></i>
-                            </a>
-
-                            <button type="button" class="btn btn-info btn-floating" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{ equipment.id }}">
-                                <i class="fas fa-magic"></i>
-                            </button>
-
-                            <!-- Modal for each equipment -->
-                            <div class="modal fade" id="staticBackdrop_{{ equipment.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel_{{ equipment.id }}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="staticBackdropLabel_{{ equipment.id }}">Edit Equipment</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form method="post" action="{{ path('app_equipment_update', {'id': equipment.id}) }}">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Equipment Name</label>
-                                                    <input type="text" class="form-control" name="equipment" value="{{ equipment.name }}">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Description</label>
-                                                    <input type="text" class="form-control" name="description" value="{{ equipment.description }}">
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+	</div>
 
 {% endblock %}

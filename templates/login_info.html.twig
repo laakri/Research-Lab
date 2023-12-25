@@ -1,0 +1,19 @@
+{# templates/_login_info.html.twig #}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <div class="navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    {% if app.user %}
+                        <span class="navbar-text">
+                            Logged in as {{ app.user.userIdentifier }} 
+                            <a href="{{ path('app_logout') }}" class="btn btn-sm btn-outline-danger">Logout</a>
+                        </span>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+

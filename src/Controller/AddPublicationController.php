@@ -37,7 +37,7 @@ public function index( Request $request, PersistenceManagerRegistry $doctrine , 
 
            // return $this->redirectToRoute('index');
         }
-          $publications = $doctrine->getRepository(Publication::class)->findAllWithProjects();
+        $publications = $doctrine->getRepository(Publication::class)->findAllWithProjects();
 
         $projectChoices = $projectRepository->findAll();
 

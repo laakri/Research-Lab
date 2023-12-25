@@ -14,7 +14,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/', name: 'app_register')]
+    #[Route('/signup', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
@@ -38,7 +38,7 @@ class RegistrationController extends AbstractController
         
             // do anything else you need here, like send an email
         
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('app_home_page');
         }
 
         return $this->render('registration/register.html.twig', [

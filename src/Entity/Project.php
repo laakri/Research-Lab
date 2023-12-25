@@ -18,12 +18,12 @@ class Project
     #[ORM\Column(length: 35, nullable: true)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $description = null;
+/**
+ * @ORM\Column(type="string", length=255, nullable=true)
+ */
+private $description;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $researcherId = null;
-
+   
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'principalProjects')]
     private ?User $principalResearcher = null;
 
@@ -68,17 +68,7 @@ class Project
         return $this;
     }
 
-    public function getResearcherId(): ?int
-    {
-        return $this->researcherId;
-    }
-
-    public function setResearcherId(?int $researcherId): static
-    {
-        $this->researcherId = $researcherId;
-
-        return $this;
-    }
+    
 
     public function getPrincipalResearcher(): ?User
     {

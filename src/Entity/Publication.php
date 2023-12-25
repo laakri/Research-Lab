@@ -22,6 +22,9 @@ class Publication
 
     #[ORM\ManyToOne(inversedBy: 'publications')]
     private ?Project $projet = null;
+
+    #[ORM\ManyToOne(inversedBy: 'publications')]
+    private ?User $chercheur = null;
   
 
     public function getId(): ?int
@@ -61,6 +64,18 @@ class Publication
     public function setProjet(?project $projet): static
     {
         $this->projet = $projet;
+
+        return $this;
+    }
+
+    public function getChercheur(): ?user
+    {
+        return $this->chercheur;
+    }
+
+    public function setChercheur(?user $chercheur): static
+    {
+        $this->chercheur = $chercheur;
 
         return $this;
     }

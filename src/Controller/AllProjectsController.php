@@ -17,14 +17,22 @@ class AllProjectsController extends AbstractController
 {
     #[Route('/all/projects', name: 'app_all_projects')]
     public function index(EntityManagerInterface $entityManager): Response
-    {
+    {            
+        if ($this->isGranted('ROLE_ADMIN')) {
+
         // Get all projects from the database
         $projects = $entityManager->getRepository(Project::class)->findAll();
         return $this->render('all_projects/index.html.twig', [
             'projects' => $projects,
             
         ]);
+        }
+        else{
+            return $this->redirectToRoute('app_home_page');
+        }
     }
+
+
 
     #[Route('/delete/project/{id}', name: 'app_delete_project')]
     public function deleteProject(Project $project, EntityManagerInterface $entityManager): RedirectResponse
@@ -39,7 +47,33 @@ class AllProjectsController extends AbstractController
         // Redirect back to the project list
         return $this->redirectToRoute('app_all_projects');
     }
-    #[Route('/select-researcher/{projectId}/{researcherId}', name: 'app_select_researcher')]
+    #[Route('/select-second-researcher/{projectId}/{researcherId}', name: 'app_select_second_researcher')]
+        public function selectSecondResearcher(
+            EntityManagerInterface $entityManager,
+            int $projectId,
+            int $researcherId
+        ): Response {
+            $project = $entityManager->getRepository(Project::class)->find($projectId);
+
+            if (!$project) {
+                throw $this->createNotFoundException('Project not found');
+            }
+
+            $researcher = $entityManager->getRepository(User::class)->find($researcherId);
+
+            if (!$researcher) {
+                throw $this->createNotFoundException('Researcher not found');
+            }
+
+            $project->addResearcher($researcher);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Second Researcher selected successfully!');
+
+            return $this->redirectToRoute('app_all_projects');
+        }
+
+    #[Route('/select-principal-researcher/{projectId}/{researcherId}', name: 'app_select_researcher')]
         public function selectResearcher(
             EntityManagerInterface $entityManager,
             int $projectId,
@@ -88,5 +122,23 @@ class AllProjectsController extends AbstractController
         }
         
         return $this->json($data);
+    }
+    #[Route('/edit/project/{id}', name: 'app_edit_project')]
+    public function editProject(Request $request, EntityManagerInterface $entityManager, Project $project): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        // Retrieve the edited name and description from the request data
+        $editedName = $data['editedName'] ?? null;
+        $editedDescription = $data['editedDescription'] ?? null;
+
+        // Update the project's name and description
+        $project->setName($editedName);
+        $project->setDescription($editedDescription);
+
+        // Save changes to the database
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_all_projects');
     }
 }

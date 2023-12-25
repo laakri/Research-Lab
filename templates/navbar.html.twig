@@ -12,18 +12,8 @@
 				<span>Home</span>
 			</a>
 		</li>
-		<li>
-			<a href="{{ path('app_login') }}">
-				<i class="fas fa-sign-in-alt"></i>
-				<span>Sign In</span>
-			</a>
-		</li>
-		<li>
-			<a href="{{ path('app_register') }}">
-				<i class="fas fa-user-plus"></i>
-				<span>Sign Up</span>
-			</a>
-		</li>
+		
+		
 		<li {% if is_granted('ROLE_ADMIN') %}style="display: block;"{% else %}style="display: none;"{% endif %}>
 			<a href="{{ path('app_users') }}" >
 				<i class="fas fa-toolbox"></i>
@@ -88,7 +78,7 @@
 	/* Add some basic styles for the sidebar */
 	#sidebar {
 		height: 100%;
-		width: 170px; /* Adjusted width */
+		width: 280px; /* Adjusted width */
 		position: fixed;
 		top: 0;
 		left: 0;

@@ -22,14 +22,12 @@ class PublicationType extends AbstractType
     {
         $builder
             ->add('title')
+            ->add('description')
             ->add('projet', EntityType::class, [
                 'class' => Project::class,
-                'choice_label' => 'name', // adjust this based on your Project entity properties
-            ])
-            ->add('chercheur', EntityType::class, [
-                'class' => 'App\Entity\User',
-                'choice_label' => 'email', // adjust this based on your User entity
+                'choice_label' => 'name', 
             ]);
+          
         
     }
 

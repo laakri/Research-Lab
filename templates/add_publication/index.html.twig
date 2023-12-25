@@ -92,15 +92,9 @@
             <tr>
                 <th scope="row">{{ loop.index }}</th>
                 <td>{{ publication.getTitle() }}</td>
+                <td>{{ publication.getDescription() }}</td>
                 <td>{{ publication.getProjet().getName() }}</td>
-<td>
-    {% if publication.getChercheur() is not null %}
-        {{ publication.getChercheur().getEmail() }}
-    {% else %}
-        <!-- Handle the case where Chercheur is null -->
-        Not Available
-    {% endif %}
-</td>
+                <td>{{ publication.getChercheur().getEmail() }}</td>
                 <td>{{ publication.getDateP()|date('Y-m-d') }}</td>
                 <td>
                    <a href="{{ path('delete_publication', {'id': publication.getId()}) }}"

@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Equipments;
 use App\Entity\Project;
 use App\Entity\User;
+use App\Entity\EquipProj;
+
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,9 +25,13 @@ class AllProjectsController extends AbstractController
 
         // Get all projects from the database
         $projects = $entityManager->getRepository(Project::class)->findAll();
+        $equipments = $entityManager->getRepository(Equipments::class)->findAll();
+        
+
+
         return $this->render('all_projects/index.html.twig', [
             'projects' => $projects,
-            
+            'equipments'=>$equipments, 
         ]);
         }
         else{
@@ -124,7 +131,7 @@ class AllProjectsController extends AbstractController
         return $this->json($data);
     }
     #[Route('/edit/project/{id}', name: 'app_edit_project')]
-    public function editProject(Request $request, EntityManagerInterface $entityManager, Project $project): JsonResponse
+    public function editProject(Request $request, EntityManagerInterface $entityManager, Project $project): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -140,5 +147,30 @@ class AllProjectsController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('app_all_projects');
+    }
+     
+    #[Route('/save-selected-equipment', name:"app_save_selected_equipment")]
+     
+    public function saveSelectedEquipment(Request $request, EntityManagerInterface $entityManager,): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+
+        $project = $entityManager->getRepository(Project::class)->find($data['project_id']);
+        $selectedEquipmentIds = $data['equipment_ids'];
+
+        // Persist the selected equipment for the project
+        foreach ($selectedEquipmentIds as $equipmentId) {
+            $equipProj = new EquipProj();
+            $equipProj->setProjID($project->getId());
+            $equipProj->setEquipID($equipmentId);
+
+            $entityManager->persist($equipProj);
+        }
+
+        $entityManager->flush();
+
+        // You can return a JSON response indicating success or any other relevant information
+        return new JsonResponse(['success' => true]);
     }
 }

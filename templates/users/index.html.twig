@@ -1,30 +1,75 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User List{% endblock %}
+{% block title %}User List
+{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1>User List</h1>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            <a href="{{ path('app_delete_user', {'id': user.id}) }}" class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% endblock %}
+<style>
+	body {
+		font-family: 'Arial', sans-serif;
+		margin: 20px;
+		text-align: center;
+	}
+
+	h1 {
+		color: green;
+	}
+
+	canvas {
+		border: 2px solid #858080;
+	}
+</style>
+
+<div class="container mt-4">
+	<h1>User List</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Email</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users %}
+				<tr>
+					<td>{{ user.id }}</td>
+					<td>{{ user.email }}</td>
+					<td>
+						<a href="{{ path('app_delete_user', {'id': user.id}) }}" class="btn btn-danger">Delete</a>
+						<button type="button" class="btn btn-info btn-floating" data-bs-toggle="modal" data-bs-target="#staticBackdrop_{{ user.id }}">
+							<i class="fas fa-magic"></i>
+						</button>
+					</td>
+
+				</tr>
+				<!-- Modal for profile User -->
+				<div class="modal fade" id="staticBackdrop_{{ user.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel_{{ user.id }}" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+						<style>
+						.tets{
+							padding:20px
+						}
+						</style>
+								<div class="tets">
+									<div class="">
+										<h1>Profile chercheur</h1>
+
+										<span class="text-black-50">{{ user.email }}</span>
+										<br>
+										<span>Description :</span>
+									</br>
+									 <p>{{ user.roles is iterable and 'ROLE_ADMIN' in user.roles ? 'Admin' : 'Chercheur' }}</p>
+								</br>
+								<button type="button" class="btn btn-success btn-rounded" data-mdb-ripple-init>Modifier</button>
+								<button type="button" class="btn btn-danger btn-rounded" data-mdb-ripple-init>Supprimer</button>
+						</div>
+					</div>
+				</div>
+			</div> 
+	    </div>
+   
+{% endfor %}</tbody></table></div>{% endblock %}

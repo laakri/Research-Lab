@@ -1,246 +1,270 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    
-    <div class="container mt-4">
 
-        <h1>All Projects</h1>
+	<div class="container mt-4">
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Principal Researcher ID</th>
-                    <th></th>
-                    <th>Second Researcher ID</th>
-                    <th></th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+		<h1>All Projects</h1>
 
-                </tr>
-            </thead>
-            <tbody>
-                {% for project in projects %}
-                    <tr>
-                        <td>{{ project.id }}</td>
-                        <td>{{ project.name }}</td>
-                        <td>{{ project.description }}</td>
-                        <td>{{ project.principalResearcher ? project.principalResearcher.email : 'N/A' }}</td>
-                        <td>
-                            <button 
-                                type="button" 
-                                class="btn btn-primary" 
-                                data-toggle="modal" 
-                                onclick="showUserDropdown({{ project.id }}, 'principal')"
-                            >
-                                add
-                            </button>
-                           
-                        </td>
-                        
-                        <td>{{ project.researchers.first ? project.researchers.first.email : 'N/A' }}</td>
-                        
-                         
-                        <td>
-                         <button 
-                                type="button" 
-                                class="btn btn-primary" 
-                                data-toggle="modal" 
-                                onclick="showUserDropdown({{ project.id }}, 'second')"
-                            >
-                                add
-                            </button>
-                        </td>  
-                        <td>
-                            <button 
-                                type="button" 
-                                class="btn btn-info" 
-                                data-toggle="modal" 
-                                onclick="showEditPopup({{ project.id }})"
-                            >
-                                Edit
-                            </button>
-                        </td>
-                        <td>
-                            <a href="{{ path('app_delete_project', {'id': project.id}) }}" class="btn btn-danger">Delete</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Principal Researcher ID</th>
+					<th></th>
+					<th>Second Researcher ID</th>
+					<th></th>
+					<th>Add Equipment</th>
+					<th>Edit</th>
+					<th>Delete</th>
 
-    <div class="modal fade" id="userDropdownModal" tabindex="-1" role="dialog" aria-labelledby="userDropdownModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="userDropdownModalLabel">Select Researcher</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="userDropdownContainer">
-                    <!-- Dropdown content will be inserted here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="confirmButton" onclick="confirmSelection()">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
+				</tr>
+			</thead>
+			<tbody>
+				{% for project in projects %}
+					<tr>
+						<td>{{ project.id }}</td>
+						<td>{{ project.name }}</td>
+						<td>{{ project.description }}</td>
+						<td>{{ project.principalResearcher ? project.principalResearcher.email : 'N/A' }}</td>
+						<td>
+							<button type="button" class="btn btn-primary" data-toggle="modal" onclick="showUserDropdown({{ project.id }}, 'principal')">
+								add
+							</button>
 
-<div class="modal fade" id="editProjectModal" tabindex="-1" role="dialog" aria-labelledby="editProjectModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProjectModalLabel">Edit Project</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editProjectForm">
-                    <div class="mb-3">
-                        <label for="editProjectName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="editProjectName" name="name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="editProjectDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="editProjectDescription" name="description"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="confirmEdit()">Save Changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    let editProjectId; // Declare a variable to store the current project ID
+						</td>
 
-    function showEditPopup(projectId) {
-        editProjectId = projectId; // Store the current project ID
+						<td>{{ project.researchers.first ? project.researchers.first.email : 'N/A' }}</td>
 
-        // Retrieve the current project's name and description
-        const projectName = $('#name_' + projectId).text();
-        const projectDescription = $('#description_' + projectId).text();
 
-        // Set the values in the edit form
-        $('#editProjectName').val(projectName);
-        $('#editProjectDescription').val(projectDescription);
+						<td>
+							<button type="button" class="btn btn-primary" data-toggle="modal" onclick="showUserDropdown({{ project.id }}, 'second')">
+								add
+							</button>
+						</td>
 
-        // Show the edit project modal
-        $('#editProjectModal').modal('show');
-    }
+						<td>
 
-    function confirmEdit() {
-        // Retrieve the edited values from the form
-        const editedName = $('#editProjectName').val();
-        const editedDescription = $('#editProjectDescription').val();
+							<select class="form-select" multiple aria-label="multiple select example" id="equipmentSelect_{{ project.id }}">
+								{% for equipment in equipments %}
+									<option value="{{ equipment.id }}">{{ equipment.name }}</option>
+								{% endfor %}
+							</select>
+							<button type="button" class="btn btn-primary" onclick="addEquipment({{ project.id }})">Add</button>
 
-        // You may want to send an AJAX request to update the database
-        // For simplicity, I'll assume you have a function named updateProject
-        // that you can implement to update the database
-        updateProject(editProjectId, editedName, editedDescription);
 
-        // Update the name and description in the table
-        $('#name_' + editProjectId).text(editedName);
-        $('#description_' + editProjectId).text(editedDescription);
+						</td>
 
-        // Close the modal
-        $('#editProjectModal').modal('hide');
-    }
+						<td>
+							<button type="button" class="btn btn-info" data-toggle="modal" onclick="showEditPopup({{ project.id }})">
+								Edit
+							</button>
+						</td>
+						<td>
+							<a href="{{ path('app_delete_project', {'id': project.id}) }}" class="btn btn-danger">Delete</a>
+							<a href="{{ path('project_details', {'id': project.id}) }}" class="btn btn-danger">Profil</a>
 
-    function updateProject(projectId, editedName, editedDescription) {
-    console.log(`Project ID: ${projectId}, Edited Name: ${editedName}, Edited Description: ${editedDescription}`);
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 
-    fetch(`/edit/project/${projectId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            editedName: editedName,
-            editedDescription: editedDescription,
-        }),
-    })
-    .then(response => response.json())
-    
-    
+	<div class="modal fade" id="userDropdownModal" tabindex="-1" role="dialog" aria-labelledby="userDropdownModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="userDropdownModalLabel">Select Researcher</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div
+					class="modal-body" id="userDropdownContainer"><!-- Dropdown content will be inserted here -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="confirmButton" onclick="confirmSelection()">Confirm</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="editProjectModal" tabindex="-1" role="dialog" aria-labelledby="editProjectModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editProjectModalLabel">Edit Project</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="editProjectForm">
+						<div class="mb-3">
+							<label for="editProjectName" class="form-label">Name</label>
+							<input type="text" class="form-control" id="editProjectName" name="name">
+						</div>
+						<div class="mb-3">
+							<label for="editProjectDescription" class="form-label">Description</label>
+							<textarea class="form-control" id="editProjectDescription" name="description"></textarea>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" onclick="confirmEdit()">Save Changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+		let editProjectId; // Declare a variable to store the current project ID
+
+function showEditPopup(projectId) {
+editProjectId = projectId;
+// Store the current project ID
+
+// Retrieve the current project's name and description
+const projectName = $('#name_' + projectId).text();
+const projectDescription = $('#description_' + projectId).text();
+
+// Set the values in the edit form
+$('#editProjectName').val(projectName);
+$('#editProjectDescription').val(projectDescription);
+
+// Show the edit project modal
+$('#editProjectModal').modal('show');
 }
 
-</script>
-    <script>
-    let currentProjectId; // Declare a variable to store the current project ID
-    let currentRole; // Declare a variable to store the current researcher role
+function confirmEdit() { // Retrieve the edited values from the form
+const editedName = $('#editProjectName').val();
+const editedDescription = $('#editProjectDescription').val();
 
-    function showUserDropdown(projectId, role) {
-        currentProjectId = projectId; // Store the current project ID
-        currentRole = role; // Store the current researcher role
+// You may want to send an AJAX request to update the database
+// For simplicity, I'll assume you have a function named updateProject
+// that you can implement to update the database
+updateProject(editProjectId, editedName, editedDescription);
 
-        fetch(`/get/users`)
-            .then(response => response.json())
-            .then(data => {
-                const dropdown = document.createElement('select');
-                dropdown.name = 'researcherId';
+// Update the name and description in the table
+$('#name_' + editProjectId).text(editedName);
+$('#description_' + editProjectId).text(editedDescription);
 
-                data.forEach(user => {
-                    const option = document.createElement('option');
-                    option.value = user.id;
-                    option.text = user.email;
-                    dropdown.appendChild(option);
-                });
+// Close the modal
+$('#editProjectModal').modal('hide');
+}
 
-                const modalContent = document.createElement('div');
-                modalContent.appendChild(dropdown);
+function updateProject(projectId, editedName, editedDescription) {
+console.log(`Project ID: ${projectId}, Edited Name: ${editedName}, Edited Description: ${editedDescription}`);
 
-                $('#userDropdownModal').modal('show');
-                $('#userDropdownContainer').html(modalContent.innerHTML);
+fetch (`/edit/project/${projectId}`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(
+{editedName: editedName, editedDescription: editedDescription}
+)
+}).then(response => response.json())
 
-                // Update the modal title based on the role
-                $('#userDropdownModalLabel').text(`Select ${role === 'principal' ? 'Principal ' : 'Second '} Researcher`);
-            });
-    }
 
-    function confirmSelection() {
-        const selectedUserId = $('#userDropdownContainer select').val();
+}
+	</script>
+	<script>
+		let currentProjectId; // Declare a variable to store the current project ID
+let currentRole; // Declare a variable to store the current researcher role
 
-        // You may want to send an AJAX request to update the database as well
-        // For simplicity, I'll assume you have a function named updateResearcherId
-        // that you can implement to update the database
-        updateResearcherId(selectedUserId);
+function showUserDropdown(projectId, role) {
+currentProjectId = projectId; // Store the current project ID
+currentRole = role; // Store the current researcher role
 
-        // Update the researcher ID in the table based on the role
-        document.getElementById(`${currentRole}ResearcherId_${currentProjectId}`).textContent = selectedUserId;
+fetch(`/get/users`).then(response => response.json()).then(data => {
+const dropdown = document.createElement('select');
+dropdown.name = 'researcherId';
 
-        // Close the modal
-        $('#userDropdownModal').modal('hide');
-    }
+data.forEach(user => {
+const option = document.createElement('option');
+option.value = user.id;
+option.text = user.email;
+dropdown.appendChild(option);
+});
 
-    function updateResearcherId(researcherId) {
-        console.log(`Project ID: ${currentProjectId}, ${currentRole} Researcher ID: ${researcherId}`);
+const modalContent = document.createElement('div');
+modalContent.appendChild(dropdown);
 
-        fetch(`/select-${currentRole}-researcher/${currentProjectId}/${researcherId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({}),
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Handle the response if needed
-            console.log(`Server response for ${currentRole} researcher:`, data);
-        })
-        .catch(error => {
-        });
-    }
-</script>
+$('#userDropdownModal').modal('show');
+$('#userDropdownContainer').html(modalContent.innerHTML);
+
+// Update the modal title based on the role
+$('#userDropdownModalLabel').text (`Select ${
+role === 'principal' ? 'Principal ' : 'Second '
+} Researcher`);
+});
+}
+
+
+function confirmSelection() {
+const selectedUserId = $('#userDropdownContainer select').val();
+
+// You may want to send an AJAX request to update the database as well
+// For simplicity, I'll assume you have a function named updateResearcherId
+// that you can implement to update the database
+updateResearcherId(selectedUserId);
+
+// Update the researcher ID in the table based on the role
+document.getElementById(`${currentRole}ResearcherId_${currentProjectId}`).textContent = selectedUserId;
+
+// Close the modal
+$('#userDropdownModal').modal('hide');
+}
+
+function updateResearcherId(researcherId) {
+console.log(`Project ID: ${currentProjectId}, ${currentRole} Researcher ID: ${researcherId}`);
+
+fetch(`/select-${currentRole}-researcher/${currentProjectId}/${researcherId}`, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify({})
+}).then(response => response.json()).then(data => { // Handle the response if needed
+console.log (`Server response for ${currentRole} researcher:`, data);
+}).catch(error => {});
+}
+	</script>
+
+	{% block javascripts %}
+		<script>
+			function addEquipment(projectId) {
+var select = document.getElementById('equipmentSelect_' + projectId);
+var selectedEquipmentIds = Array.from(select.selectedOptions).map(option => option.value);
+
+// Faites une requête AJAX pour mettre à jour l'équipement sélectionné
+fetch('{{ path('app_save_selected_equipment') }}', {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(
+{project_id: projectId, equipment_ids: selectedEquipmentIds}
+)
+}).then(response => response.json()).then(data => { // Traitez la réponse ici (par exemple, affichez un message de réussite)
+console.log(data);
+
+// Réinitialisez la sélection après l'ajout
+select.selectedIndex = -1;
+}).catch(error => { // Gérez les erreurs ici (par exemple, affichez un message d'erreur)
+console.error('Erreur :', error);
+});
+}
+		</script>
+	{% endblock %}
 
 
 {% endblock %}

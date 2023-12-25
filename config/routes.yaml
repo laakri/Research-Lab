@@ -23,6 +23,9 @@ create_project:
 all_projects:
   path: /all-projects
   controller: App\Controller\AllProjectsController::index
+users:
+  path: /users
+  controller: App\Controller\UsersController::index
 
 project_details:
   path: /project-details/{id}

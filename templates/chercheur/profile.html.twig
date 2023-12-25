@@ -10,7 +10,6 @@
     {{ parent() }}
     <script>
         $(document).ready(function () {
-            // Initialize the Bootstrap modal
             $('#emailModificationModal').modal();
         });
     </script>
@@ -108,6 +107,11 @@
     padding-bottom: 3rem;
     color: green;
 }
+.bttn{
+	background-color:#5a645a ;
+	border: #5a645a 1px solid  ;
+
+}
 	</style>
 	<div class="container rounded bg-white mt-5 mb-5">
 		<div class="row">
@@ -124,11 +128,11 @@
         {% endfor %}
 
         {# Button to trigger the email modification modal #}
-        <button type="button" class="btn btn-primary btn-rounded" data-toggle="modal" data-target="#emailModificationModal">
+        <button type="button" class="btn btn-primary  bttn btn-rounded" data-toggle="modal" data-target="#emailModificationModal">
             Update Email
         </button>
 <br><br>
-            <button type="button" class="btn btn-outline-warning button-add" data-mdb-ripple-init data-mdb-ripple-color="dark">Add Publication scientifique</button>
+    
 
         {# Email modification modal #}
         <div class="modal" id="emailModificationModal" tabindex="-1" role="dialog" aria-labelledby="emailModificationModalLabel" aria-hidden="true">
@@ -178,9 +182,10 @@
                             <td>{{ project.name }}</td>
                             <td>{{ project.publications | length }}</td>
                             <td>
-                                <form action="{{ path('add_publication') }}" method="post">
+                            <form action="{{ path('add_publication') }}" method="post">
+
     <button type="submit" class="btn btn-primary" data-mdb-ripple-init>
-        View all the publications
+        Voir les  publications
     </button>
 </form>
                             </td>

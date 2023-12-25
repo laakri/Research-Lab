@@ -64,13 +64,29 @@
 
 <div class="publication">
     <div class="ajoutPublication card p-4">
-    <h2 class="mb-4">Add Publication</h2>
 
-    {# Publication form #}
+  <h2>New Publication</h2>
+
     {{ form_start(form) }}
-    {{ form_widget(form, {'attr': {'class': 'mb-3'}}) }}
+    <br>
+    {{ form_label(form.title) }}
+    <br> 
 
-    <button type="submit" class="btn btn-primary">Add Publication</button>
+    {{ form_errors(form.title) }}
+    {{ form_widget(form.title) }}
+    <br> 
+
+    {{ form_label(form.description) }}
+    <br>
+    {{ form_errors(form.description) }}
+    {{ form_widget(form.description) }}
+    <br> 
+
+    {{ form_label(form.projet) }}
+    <br>
+    {{ form_errors(form.projet) }}
+    {{ form_widget(form.projet) }}
+    
     {{ form_end(form) }}
 </div>
 

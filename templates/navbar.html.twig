@@ -13,7 +13,12 @@
 			</a>
 		</li>
 		
-		
+		   <li>
+            <a href="{{ path('app_create_project') }}">
+                <i class="fas fa-plus"></i>
+                <span>Create Project</span>
+            </a>
+        </li>
 		<li {% if is_granted('ROLE_ADMIN') %}style="display: block;"{% else %}style="display: none;"{% endif %}>
 			<a href="{{ path('app_users') }}" >
 				<i class="fas fa-toolbox"></i>

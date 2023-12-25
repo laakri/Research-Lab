@@ -6,6 +6,15 @@
 	{{ parent() }}
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            // Initialize the Bootstrap modal
+            $('#emailModificationModal').modal();
+        });
+    </script>
+{% endblock %}
 {% block body %}
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<style>
@@ -88,74 +97,101 @@
 		canvas {
 			border: 2px solid #858080;
 		}
+		button.btn.btn-outline-warning.button-add {
+    background: azure;
+    border: black;
+    padding: 1rem;
+    margin: 1rem;
+}
+.d-flex.justify-content-between{
+    margin-bottom: 2rem;
+    padding-bottom: 3rem;
+    color: green;
+}
 	</style>
 	<div class="container rounded bg-white mt-5 mb-5">
 		<div class="row">
 			<div class="col-md-3 border-right">
 				<div class="d-flex flex-column align-items-center text-center p-3 py-5">
-					<h1>Profile chercheur</h1>
+					    <h1>User Profile</h1>
+<br><br><br>
+    {% if user %}
+        <p>Email: {{ user.getEmail() }}</p>
 
-					<span class="text-black-50">Zbidi chaima</span>
-					<span>Description :</span>
-				</br>
-				<p>Lorem.jndqkhjnq jdhindkn sdhizqhihde
-				</p>
+        {# Display flash messages #}
+        {% for flash_message in app.flashes('success') %}
+            <div class="alert alert-success">{{ flash_message }}</div>
+        {% endfor %}
+
+        {# Button to trigger the email modification modal #}
+        <button type="button" class="btn btn-primary btn-rounded" data-toggle="modal" data-target="#emailModificationModal">
+            Update Email
+        </button>
+<br><br>
+            <button type="button" class="btn btn-outline-warning button-add" data-mdb-ripple-init data-mdb-ripple-color="dark">Add Publication scientifique</button>
+
+        {# Email modification modal #}
+        <div class="modal" id="emailModificationModal" tabindex="-1" role="dialog" aria-labelledby="emailModificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="emailModificationModalLabel">Update Email</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {# Add your form here #}
+                        {{ form_start(form) }}
+                        {{ form_row(form.email) }}
+                        <button type="submit" class="btn btn-success btn-rounded">Update Email</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>User not found.</p>
+    {% endif %}
 			</br>
-			<button type="button" class="btn btn-success btn-rounded" data-mdb-ripple-init>Modifier</button>
-			<button type="button" class="btn btn-danger btn-rounded" data-mdb-ripple-init>Supprimer</button>
+			<!--<button type="button" class="btn btn-danger btn-rounded" data-mdb-ripple-init>Supprimer</button>-->
 		</div>
 	</div>
-	<div class="col-md-5 border-right">
-		<div class="p-3 py-5">
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h4 class="text-right">Gestion des projets</h4>
-			</div>
-			<button type="button" class="btn btn-outline-warning button-add" data-mdb-ripple-init data-mdb-ripple-color="dark">Add Publication scientifique</button>
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">Projets</th>
-						<th scope="col">Publication</th>
-						<th scope="col">Gestion</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th scope="row">1</th>
-						<td>energie</td>
-						<td>Otto</td>
-						<td>
-							<button type="button" class="btn btn-primary btn-floating" data-mdb-ripple-init>
-								<i class="fas fa-download"></i>
-							</button>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">2</th>
-						<td>electrique</td>
-						<td>Thornton</td>
-						<td>
-							<button type="button" class="btn btn-primary btn-floating" data-mdb-ripple-init>
-								<i class="fas fa-download"></i>
-							</button>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">2</th>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>
-							<button type="button" class="btn btn-primary btn-floating" data-mdb-ripple-init>
-								<i class="fas fa-download"></i>
-							</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<div class="col-md-7">
+        <div class="p-5 py-7">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+			<h1 class="d-flex flex-column align-items-center text-center "> Liste des Projets</h1>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Projets</th>
+                        <th scope="col">Publication</th>
+                        <th scope="col">Gestion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                        <tr>
+                            <th scope="row">{{ project.id }}</th>
+                            <td>{{ project.name }}</td>
+                            <td>{{ project.publications | length }}</td>
+                            <td>
+                                <form action="{{ path('add_publication') }}" method="post">
+    <button type="submit" class="btn btn-primary" data-mdb-ripple-init>
+        View all the publications
+    </button>
+</form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-	</div>
+    </div>
+
 	
 
 

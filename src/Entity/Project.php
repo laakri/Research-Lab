@@ -23,9 +23,7 @@ class Project
  */
 private $description;
 
-    #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $researcherId = null;
-
+   
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'principalProjects')]
     private ?User $principalResearcher = null;
 
@@ -70,17 +68,7 @@ private $description;
         return $this;
     }
 
-    public function getResearcherId(): ?int
-    {
-        return $this->researcherId;
-    }
-
-    public function setResearcherId(?int $researcherId): static
-    {
-        $this->researcherId = $researcherId;
-
-        return $this;
-    }
+    
 
     public function getPrincipalResearcher(): ?User
     {

@@ -1,6 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<style>
+.bttn{
+    background-color: #213250e0;
+     border-radius: 18px; 
+      width: 83px;
+       text-align:center ; 
+}
+.btnn{
+    background-color: #cadcff;
+     border-radius: 18px;  
+     width: 83px; 
+     margin-right:1rem ; 
+     text-align:center ; 
+     margin-right: 1rem ; 
+     color :white ;
+}
+</style>
 {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
@@ -8,10 +25,10 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_login') }}">Login</a>
+                                <a class="nav-link btnn " href="{{ path('app_login') }}">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_register') }}">Signup</a>
+                                <a class="nav-link bttn  "   href="{{ path('app_register') }}">Signup</a>
                             </li>
                         </ul>
                     </div>
